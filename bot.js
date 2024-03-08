@@ -2,7 +2,7 @@ const { Telegraf } = require("telegraf");
 const { MongoClient } = require("mongodb");
 
 // Создание экземпляра бота
-const bot = new Telegraf("7060342495:AAHjPYNtXvk0tn0ACm0lX3ecz5JzF3ojAcI");
+const bot = new Telegraf("token");
 
 // Подключение к базе данных
 const uri = "mongodb://localhost:27017"; // Замените на URI вашей базы данных

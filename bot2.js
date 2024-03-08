@@ -8,6 +8,7 @@ const {
 const { setMyCommands } = require("./myBotLib");
 const { getMongoData } = require("./my-mongo-db-lib");
 const { connectToDatabase } = require("./connect-to-database");
+const {current_token} = require("./bottoken");
 class MongoClientExt extends MongoClient {
   isConnected;
   constructor(uri) {
@@ -17,7 +18,7 @@ class MongoClientExt extends MongoClient {
 }
 
 // Создание экземпляра бота
-const bot = new Telegraf("7060342495:AAE-XsTxfpv5xR8ZX_5Hc0bIzjKKrAz5FKg");
+const bot = new Telegraf(current_token);
 // const bot = new TelegrafExt("7060342495:AAE-XsTxfpv5xR8ZX_5Hc0bIzjKKrAz5FKg");
 
 // Подключение к базе данных
