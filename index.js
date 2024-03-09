@@ -57,7 +57,6 @@ bot.on("text", async (ctx) => {
 
     const isExistsUser = await usersCollection.findOne({ id: user.id });
 
-    
     if (isExistsUser) {
       console.log("this same user exists");
       const result = await usersCollection.updateOne(
@@ -70,31 +69,20 @@ bot.on("text", async (ctx) => {
             },
           },
         },
-        );
-        
-        console.log(await usersCollection.findOne({ id: user.id }));
-        // console.log(result);
-        
-      } else {
-        usersCollection.insertOne({
-          id: user.id,
+      );
+
+      console.log(await usersCollection.findOne({ id: user.id }));
+      // console.log(result);
+    } else {
+      usersCollection.insertOne({
+        id: user.id,
         activity: [{ timestamp: ctx.message.date, message: ctx.message.text }],
       });
     }
-    
-    // Сохранение данных пользователя и текста сообщения в базе данных
-    // const result = await usersCollection.insertOne({ user, message });
-    // console.log("Данные успешно добавлены:", result.insertedId);
-    
-    // await bot.telegram.sendMessage(
-      //   chatID,
-      //   "he data has been successfully saved in the database. Thanks.",
-      // );
-      
-      // ctx.reply("The data has been successfully saved in the database. Thanks.");
-    } else {
-      ctx.reply("Error connecting to the database. Please try again later.");
-    }
+
+  } else {
+    ctx.reply("Error connecting to the database. Please try again later.");
+  }
 
   if (message === "/deletethefuckingdata") {
     await connectToDatabase(client);
@@ -109,15 +97,18 @@ bot.on("text", async (ctx) => {
       console.log("mongo data", mongodata);
 
       try {
-        const deleteResult = await usersCollection.deleteMany({}, (err, result) => {
-          if (err) {
-            console.error("Ошибка при удалении данных:", err);
-            return;
-          }
+        const deleteResult = await usersCollection.deleteMany(
+          {},
+          (err, result) => {
+            if (err) {
+              console.error("Ошибка при удалении данных:", err);
+              return;
+            }
 
-          console.log("Успешно удалены все данные из базы данных.");
-          client.close(); // Закрытие соединения с базой данных
-        });
+            console.log("Успешно удалены все данные из базы данных.");
+            client.close(); // Закрытие соединения с базой данных
+          },
+        );
 
         console.log(deleteResult);
       } catch (err) {
@@ -135,108 +126,6 @@ bot.on("text", async (ctx) => {
     bot.telegram.sendMessage(chatID, "unknown command , sorry");
   }
 });
-
-// Обработка текстовых сообщений
-/* bot.on("text", async (ctx) => {
-  const message = ctx.message.text;
-  const chatID = ctx.message.chat.id;
-
-  await connectToDatabase(client);
-
-  if (client.isConnected) {
-    switch (message) {
-      case "/continue":
-        bot.telegram.sendMessage(chatID, "alright , there is my menu: ", {
-          reply_markup: {
-            keyboard: defaultKeyboard,
-          },
-        });
-        break;
-      case "/world":
-        bot.telegram.sendMessage(chatID, "hello hello");
-        break;
-      case "/hello":
-        bot.telegram.sendMessage(chatID, "WORLD");
-        break;
-      case "/start":
-          bot.telegram.sendMessage(chatID, "bot just started", {
-            reply_markup: {
-              keyboard: firstKeyboard,
-            },
-          });
-
-        break;
-      case "/getdata":
-        // await connectToDatabase();
-
-        if (client.isConnected) {
-          
-          const theData = await getMongoData(client);
-
-          if (theData) {
-            console.log(theData);
-          } else {
-            console.log("nothing to display");
-          }
-
-        } else {
-          ctx.reply(
-            "Error connecting to the database. Please try again later.",
-          );
-        }
-        break;
-      case "/home":
-        break;
-      case "/exit":
-        break;
-      case "/menu":
-        await bot.telegram.sendMessage(
-          ctx.message.chat.id.toString(),
-          `Меню бота`,
-          {
-            reply_markup: {
-              keyboard: defaultKeyboard,
-            },
-          },
-        );
-
-        break;
-      case "/help":
-        await bot.telegram.sendMessage(
-          ctx.message.chat.id.toString(),
-          "Раздел помощи Markdown\n\n*Жирный Текст*\n_Текст Курсивом_\n`Текст с Копированием`\n~Перечеркнутый текст~\n``` код ```\n||скрытый текст||\n[Гиперссылка](t.me)",
-          {
-            parse_mode: "MarkdownV2",
-          },
-        );
-        break;
-      case "/setdata":
-        // Получение данных о пользователе
-        const user = {
-          id: ctx.from.id,
-          username: ctx.from.username,
-          firstName: ctx.from.first_name,
-          lastName: ctx.from.last_name,
-        };
-        // Подключение к базе данных
-        await connectToDatabase(client);
-        if (client.isConnected) {
-          const database = client.db("mydatabase"); // Замените на имя вашей базы данных
-          const collection = database.collection("mycollection"); // Замените на имя вашей коллекции
-
-          // Сохранение данных пользователя и текста сообщения в базе данных
-          const result = await collection.insertOne({ user, message });
-          console.log("Данные успешно добавлены:", result.insertedId);
-
-          ctx.reply("Данные успешно сохранены в базе данных.");
-        } else {
-          ctx.reply(
-            "Ошибка при подключении к базе данных. Пожалуйста, попробуйте позже.",
-          );
-        }
-    }
-  }
-}); */
 
 // Запуск бота
 bot.launch();

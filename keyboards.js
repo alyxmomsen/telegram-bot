@@ -1,17 +1,10 @@
 module.exports = {
   firstKeyboard: [["/continue", "/exit"]],
-  defaultKeyboard: [
-    ["/start" , "/exit"] ,
-    ["/help"]
-  ],
+  defaultKeyboard: [["/start", "/exit"], ["/help"]],
   defaultCommands: [
     {
       command: "start",
       description: "Запуск бота",
-    },
-    {
-      command: "getdata",
-      description: "get data",
     },
     {
       command: "help",
@@ -22,7 +15,7 @@ module.exports = {
       description: "go home",
     },
     {
-      command: "exit",
+      command: "bye",
       description: "get exit",
     },
     {
