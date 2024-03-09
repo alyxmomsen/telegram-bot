@@ -9,15 +9,24 @@ const commandsHandlers = {
       },
     });
   },
-  "/home": async () => {},
+  "/home": async (bot , chatID) => {
+    bot.telegram.sendMessage(chatID ,"You already at home");
+  },
   "/bye": async (bot , chatID) => {
-    bot.telegram.sendMessage(chatID , "ok, bye-bye!" , {
+    bot.telegram.sendMessage(chatID , "**ok, bye\\-bye\\!**" , {
+      parse_mode: "MarkdownV2",
       reply_markup: {
         remove_keyboard:true ,
       }
     });
   },
-  "/menu": async () => {},
+  "/menu": async (bot , chatID) => {
+    bot.telegram.sendMessage(chatID, "alright , there is my menu: ", {
+      reply_markup: {
+        keyboard: defaultKeyboard,
+      },
+    });
+  },
   "/help": async (bot, chatID) => {
     bot.telegram.sendMessage(chatID, "||Of course I'll help you\\.||", {
       parse_mode: "MarkdownV2",

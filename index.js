@@ -123,7 +123,8 @@ bot.on("text", async (ctx) => {
     const command = message;
     commandsHandlers[command](bot, chatID);
   } else {
-    bot.telegram.sendMessage(chatID, "unknown command , sorry");
+    
+    // bot.telegram.sendMessage(chatID, "unknown command , sorry");
   }
 });
 
