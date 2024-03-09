@@ -12,7 +12,15 @@ const commandsHandlers = {
   "/home": async () => {},
   "/exit": async () => {},
   "/menu": async () => {},
-  "/help": async () => {},
+  "/help": async (bot, chatID) => {
+    bot.telegram.sendMessage(
+      chatID,
+      "Раздел помощи Markdown\n\n*Жирный Текст*\n_Текст Курсивом_\n`Текст с Копированием`\n~Перечеркнутый текст~\n``` код ```\n||скрытый текст||\n[Гиперссылка](t.me)",
+      {
+        parse_mode: "MarkdownV2",
+      },
+    );
+  },
   // "/getdata": async (ctx) => {
   //   const user = {
   //       id: ctx.from.id,

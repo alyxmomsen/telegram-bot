@@ -55,10 +55,12 @@ bot.on("text", async (ctx) => {
     const database = client.db("mydatabase"); // Замените на имя вашей базы данных
     const usersCollection = database.collection("users"); // Замените на имя вашей коллекции
 
-    const isExistsUser = usersCollection.findOne({ id: user.id });
+    const isExistsUser = await usersCollection.findOne({ id: user.id });
 
+    
     if (isExistsUser) {
-      usersCollection.updateOne(
+      console.log("this same user exists");
+      const result = await usersCollection.updateOne(
         { id: user.id },
         {
           $push: {
@@ -68,42 +70,46 @@ bot.on("text", async (ctx) => {
             },
           },
         },
-      );
-    } else {
-      usersCollection.insertOne({
-        id: user.id,
-        activity: { timestamp: ctx.message.date, message: ctx.message.text },
+        );
+        
+        console.log(await usersCollection.findOne({ id: user.id }));
+        // console.log(result);
+        
+      } else {
+        usersCollection.insertOne({
+          id: user.id,
+        activity: [{ timestamp: ctx.message.date, message: ctx.message.text }],
       });
     }
-
+    
     // Сохранение данных пользователя и текста сообщения в базе данных
-    const result = await usersCollection.insertOne({ user, message });
-    console.log("Данные успешно добавлены:", result.insertedId);
-
-    await bot.telegram.sendMessage(
-      chatID,
-      "he data has been successfully saved in the database. Thanks.",
-    );
-
-    // ctx.reply("The data has been successfully saved in the database. Thanks.");
-  } else {
-    ctx.reply("Error connecting to the database. Please try again later.");
-  }
+    // const result = await usersCollection.insertOne({ user, message });
+    // console.log("Данные успешно добавлены:", result.insertedId);
+    
+    // await bot.telegram.sendMessage(
+      //   chatID,
+      //   "he data has been successfully saved in the database. Thanks.",
+      // );
+      
+      // ctx.reply("The data has been successfully saved in the database. Thanks.");
+    } else {
+      ctx.reply("Error connecting to the database. Please try again later.");
+    }
 
   if (message === "/deletethefuckingdata") {
     await connectToDatabase(client);
 
     if (client.isConnected) {
       const db = client.db("mydatabase");
-      const collection = db.collection("mycollection");
+      const usersCollection = db.collection("users");
 
-      const cursor = collection.find();
+      const cursor = usersCollection.find();
       const mongodata = await cursor.toArray();
 
       console.log("mongo data", mongodata);
 
       try {
-        const deleteResult = await collection.deleteMany({}, (err, result) => {
+        const deleteResult = await usersCollection.deleteMany({}, (err, result) => {
           if (err) {
             console.error("Ошибка при удалении данных:", err);
             return;
