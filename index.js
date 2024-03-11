@@ -128,5 +128,11 @@ bot.on("text", async (ctx) => {
   }
 });
 
+bot.action("button1" , (ctx) => {
+  ctx.reply("you pressed button 1");
+})
+
+bot.action('start');
+
 // Запуск бота
 bot.launch();

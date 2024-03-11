@@ -1,6 +1,6 @@
 module.exports = {
-  firstKeyboard: [["/continue", "/exit"]],
-  defaultKeyboard: [["/start", "/bye"], ["/help"]],
+  firstKeyboard: [["continue", "exit"]],
+  defaultKeyboard: [["start", "bye"], ["help"]],
   defaultCommands: [
     {
       command: "start",
