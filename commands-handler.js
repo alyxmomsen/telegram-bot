@@ -1,4 +1,4 @@
-const { connectToDatabase } = require("./connect-to-database");
+/* const { connectToDatabase } = require("./connect-to-database");
 const { defaultKeyboard } = require("./keyboards");
 
 const commandsHandlers = {
@@ -58,3 +58,4 @@ const commandManager = async (command, bot, chatID, DBClient) => {
 module.exports = {
   commandsHandlers,
 };
+ */
