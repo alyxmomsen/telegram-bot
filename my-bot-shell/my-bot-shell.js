@@ -31,17 +31,10 @@ class MyTelegrafFramework {
 
   #connectToDatabase() {
     if (!this.#client.isConnected) {
-      const db = this.client.db("mydatabase");
-      const collectionUsers = db.collection("users");
-      // bot.telegram.sendMessage('1547000037' , 'okay you connected');
+      this.#client.connect();
+      
+      this.#client.isConnected = true ;
 
-      const isUserExists = collectionUsers.findOne({ id: userData.id });
-
-      if (isUserExists) {
-        console.log("yes it is");
-      } else {
-        console.log("no it is NOT");
-      }
     }
   }
 
@@ -51,6 +44,18 @@ class MyTelegrafFramework {
   //   this.#bot.action();
 
   // }
+
+  // const db = this.#client.db("mydatabase");
+      // const collectionUsers = db.collection("users");
+      // bot.telegram.sendMessage('1547000037' , 'okay you connected');
+
+      // const isUserExists = collectionUsers.findOne({ id: userData.id });
+
+      // if (isUserExists) {
+      //   console.log("yes it is");
+      // } else {
+      //   console.log("no it is NOT");
+      // }
 
   async launch() {
     const result = await this.#bot.launch();
@@ -105,12 +110,19 @@ class MyTelegrafFramework {
         id: ctx.from.id,
         firstName: ctx.from.username,
         lastName: ctx.from.last_name,
-        text: ctx.message.text,
+        activity:[] ,
       };
+
+      const activity = {
+        text:ctx.message.text ,
+        timestamp:Date.now() ,
+      } ;
 
       this.#connectToDatabase();
 
       if (this.#client.isConnected) {
+
+        console.log('hendling');
         const database = this.#client.db("mydatabase");
         const usersCollection = database.collection("users");
 
@@ -118,8 +130,34 @@ class MyTelegrafFramework {
         const usersData = await cursor.toArray();
 
         if (usersData.length <= 0) {
-          console.log("users data is empty");
+
+          userData.activity.push({...activity});
+          usersCollection.insertOne({...userData});
         }
+        else {
+          console.log('searching in existing users');
+          const ifUserExists = await usersCollection.findOne({id:userData.id});
+          console.log(ifUserExists);
+
+          if(ifUserExists) {
+            console.log('yes , user exists');
+            console.log('updating...');
+            const result = await usersCollection.updateOne({id:userData.id} , {
+              $push:{
+                activity:{
+                  timestamp:activity.timestamp ,
+                  text:activity.text ,
+                }
+              }
+            });
+
+            console.log('result: ' , result);
+          }
+
+        }
+      }
+      else {
+
       }
 
       console.log("text has wrote and send");
