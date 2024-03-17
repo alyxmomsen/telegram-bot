@@ -7,13 +7,13 @@ const { current_token } = require("../src/bottoken");
 
 const uri = "mongodb://localhost:27017";
 
-class MyMongoClientShell extends MongoClient {
-  isConnected;
-  constructor(uri) {
-    super(uri);
-    this.isConnected = false;
-  }
-}
+// class MyMongoClientShell extends MongoClient {
+//   isConnected;
+//   constructor(uri) {
+//     super(uri);
+//     this.isConnected = false;
+//   }
+// }
 
 //
 
@@ -25,16 +25,22 @@ class MyTelegrafFramework {
   #setMyBotCommands() {
     this.#bot.telegram.setMyCommands([
       { command: "start", description: "Start the bot" },
-      { command: "help", description: `help me (in a little while)` },
+      { command: "help", description: `help me` },
     ]);
   }
 
   #connectToDatabase() {
-    if (!this.#client.isConnected) {
+    // this.#client.
+
+    if (!this.#client.db('mydatabase').command({ping: 1})) {
+
+      console.log('no connected');
+
       this.#client.connect();
       
-      this.#client.isConnected = true ;
-
+    }
+    else {
+      console.log('db is connected');
     }
   }
 
@@ -65,8 +71,8 @@ class MyTelegrafFramework {
     this.#actions;
     console.log("constructor getting start");
     this.#bot = new Telegraf(current_token);
-    this.#client = new MyMongoClientShell(uri);
-    this.#client.isConnected = false;
+    this.#client = new MongoClient(uri);
+    // this.#client.isConnected = false;
     this.#setMyBotCommands();
 
     this.#bot.start((ctx) => {
@@ -102,7 +108,7 @@ class MyTelegrafFramework {
     });
 
     this.#bot.hears("/help", (ctx) => {
-      ctx.reply(`Of course, I'll help you in a little while`);
+      ctx.reply(`Of course, I'll help you || in a little while ||` , {parse_mode:'MarkdownV2'});
     });
 
     this.#bot.on("text", async (ctx) => {
